@@ -1,4 +1,4 @@
-name: Talend Demo Pipeline
+name: Validate Talend Repository
 
 on:
   push:
@@ -9,23 +9,36 @@ on:
       - main
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    # Step 1: Checkout the repository code
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set Up Talend CommandLine
+    # Step 2: Verify Repository Structure
+    - name: Check Required Files
       run: |
-        wget https://path-to-talend-commandline.zip
-        unzip talend-commandline.zip -d talend-cli
+        echo "Checking for required Talend files..."
+        test -f talend.project || (echo "Missing talend.project file!" && exit 1)
+        test -d process || (echo "Missing process directory!" && exit 1)
+        echo "All required files and directories are present."
 
-    - name: Build Talend Project
+    # Step 3: (Optional) List All Jobs and Components
+    - name: List Jobs and Components
       run: |
-        ./talend-cli/Talend-Studio-linux-x86_64 -nosplash \
-          -application org.talend.commandline.CommandLine \
-          -consoleLog \
-          -clean -data workspace \
-          -log log.txt \
-          buildProject -p <ProjectName> -u <GitRepoURL>
+        echo "Listing jobs in process directory:"
+        ls -R process/
+        echo "Listing components in components directory:"
+        ls -R components/
+
+    # Step 4: (Optional) Zip Repository for Deployment
+    - name: Archive Repository
+      run: |
+        zip -r TalendGitDemo.zip ./*
+    - name: Upload Archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: talend-repository
+        path: TalendGitDemo.zip
