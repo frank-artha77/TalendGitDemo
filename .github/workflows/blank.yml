@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin' # Required: OpenJDK distribution to use
 
     # Step 3: Build with Maven
     - name: Build project
