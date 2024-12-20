@@ -13,24 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the repository code
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Java environment
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin' # Required: OpenJDK distribution to use
+    - name: Set Up Talend CommandLine
+      run: |
+        wget https://path-to-talend-commandline.zip
+        unzip talend-commandline.zip -d talend-cli
 
-    # Step 3: Build with Maven
-    - name: Build project
-      run: mvn clean package
-
-    # Step 4: Upload build artifact (e.g., .jar file)
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: talend-demo-artifact
-        path: target/*.jar
+    - name: Build Talend Project
+      run: |
+        ./talend-cli/Talend-Studio-linux-x86_64 -nosplash \
+          -application org.talend.commandline.CommandLine \
+          -consoleLog \
+          -clean -data workspace \
+          -log log.txt \
+          buildProject -p <ProjectName> -u <GitRepoURL>
