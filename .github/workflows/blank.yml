@@ -1,0 +1,54 @@
+name: Validate Talend Repository
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Debug File Structure
+    - name: Debug File Structure
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Contents of the repository:"
+        ls -R
+
+    # Step 3: Check Required Files
+    - name: Check Required Files
+      run: |
+        echo "Checking for required Talend files in TALENDGITDEMO folder..."
+        if [ ! -f ./TALENDGITDEMO/talend.project ]; then
+          echo "Missing talend.project file in TALENDGITDEMO!"
+          exit 1
+        fi
+        echo "talend.project file found in TALENDGITDEMO."
+
+    # Step 4: (Optional) List Jobs and Components
+    - name: List Jobs and Components
+      run: |
+        echo "Listing jobs in process directory (if present):"
+        ls -R TALENDGITDEMO/process || echo "No process directory found."
+        echo "Listing components in components directory (if present):"
+        ls -R TALENDGITDEMO/components || echo "No components directory found."
+
+    # Step 5: (Optional) Archive Repository
+    - name: Archive Repository
+      run: |
+        zip -r TalendGitDemo.zip ./TALENDGITDEMO/*
+    - name: Upload Archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: talend-repository
+        path: TalendGitDemo.zip
