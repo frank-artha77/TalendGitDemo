@@ -25,12 +25,15 @@ jobs:
           git config user.email "actions@github.com"
 
       - name: Fetch All Branches
-        run: git fetch --all
+        run: |
+          git fetch --all
+          git checkout develop
+          git pull origin develop
 
       - name: Checkout Main Branch
         run: git checkout main
 
       - name: Merge Develop
         run: |
-          git merge develop --no-edit
+          git merge origin/develop --no-edit --allow-unrelated-histories
           git push origin main
