@@ -1,0 +1,34 @@
+name: Feature to Develop
+
+on:
+  push:
+    branches:
+      - feature/*  # Trigger on any push to feature branches
+
+permissions:
+  contents: write
+
+jobs:
+  merge-to-develop:
+    name: Merge Feature to Develop
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure the full history is fetched for branch operations
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Fetch All Branches
+        run: git fetch --all
+
+      - name: Merge Feature to Develop
+        run: |
+          git checkout develop
+          git merge ${{ github.ref_name }} --no-edit
+          git push origin develop
