@@ -18,6 +18,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+
       - name: Validate PR
         run: |
           echo "Validating Pull Request for main branch..."
@@ -25,6 +30,6 @@ jobs:
       - name: Merge Pull Request
         run: |
           echo "Merging develop to main..."
-          gh pr merge --squash
+          gh pr merge --squash --repo ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
