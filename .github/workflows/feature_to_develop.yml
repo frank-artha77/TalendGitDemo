@@ -3,7 +3,7 @@ name: Feature to Develop
 on:
   push:
     branches:
-      - feature/*  # Trigger on any push to feature branches
+      - feature/*  # Trigger the workflow on any push to feature branches
 
 permissions:
   contents: write
