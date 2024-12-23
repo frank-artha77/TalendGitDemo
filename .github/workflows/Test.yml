@@ -1,0 +1,30 @@
+name: Develop to Main
+
+on:
+  pull_request:
+    branches:
+      - main  # Triggered when a PR targets the main branch
+
+permissions:
+  contents: write
+
+jobs:
+  merge-to-main:
+    name: Merge Develop to Main
+    runs-on: ubuntu-latest
+    environment: production  # Enforces manual approval for the production environment
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Validate PR
+        run: |
+          echo "Validating Pull Request for main branch..."
+
+      - name: Merge Pull Request
+        run: |
+          echo "Merging develop to main..."
+          gh pr merge --squash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
