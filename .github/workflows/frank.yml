@@ -14,7 +14,6 @@ jobs:
   merge:
     name: Merge Develop to Main
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
 
     steps:
       - name: Checkout Repository
